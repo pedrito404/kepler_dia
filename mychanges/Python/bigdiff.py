@@ -74,133 +74,133 @@ ids1, xm, ym, mflx, mflx_er = numpy.loadtxt(caldir+camera+'_'+ccd+'_master.flux'
 
 #begin with the algorithm to difference the images
 for ii in range(0, nfiles):
-	hld = files[ii].split('.')
-	finnme = hld[0]+'dxx.'+hld[1]
+        hld = files[ii].split('.')
+        finnme = hld[0]+'dxx.'+hld[1]
 
-	#check to see if the differenced file already exists
-	if (os.path.isfile(difdir+finnme) == 0):
-		#read in the image
-		imglist = fits.open(clndir+files[ii])
-		iheader = imglist[0].header #get the header info
-		img = imglist[0].data #get the image info
-		mean, median, std = sigma_clipped_stats(img, sigma = 3.0, iters = 5)
-	
-		#write the new image file
-		nimg = img-median
-		ihd = fits.PrimaryHDU(nimg, header=iheader)
-		ihd.writeto(cdedir+'img.fits', overwrite = True)
-		jd1 = pyfits.getval(cdedir+'img.fits','TSTART')
-		jd2 = pyfits.getval(cdedir+'img.fits','TSTOP')
-		exp_time = pyfits.getval(cdedir+'img.fits', 'EXPOSURE')*3600.*24.
-		jd = numpy.mean([jd1,jd2])
-		print 'Getting magnitudes from the star list at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+        #check to see if the differenced file already exists
+        if (os.path.isfile(difdir+finnme) == 0):
+                #read in the image
+                imglist = fits.open(clndir+files[ii])
+                iheader = imglist[0].header #get the header info
+                img = imglist[0].data #get the image info
+                mean, median, std = sigma_clipped_stats(img, sigma = 3.0, iters = 5)
+        
+                #write the new image file
+                nimg = img-median
+                ihd = fits.PrimaryHDU(nimg, header=iheader)
+                ihd.writeto(cdedir+'img.fits', overwrite = True)
+                jd1 = pyfits.getval(cdedir+'img.fits','TSTART')
+                jd2 = pyfits.getval(cdedir+'img.fits','TSTOP')
+                exp_time = pyfits.getval(cdedir+'img.fits', 'EXPOSURE')*3600.*24.
+                jd = numpy.mean([jd1,jd2])
+                print 'Getting magnitudes from the star list at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
 
-		#determine the magnitudes, errors and distances to the objects
-		#prepare the apertures
-		positions = [xx,yy]
-		apertures = CircularAperture(positions, r = rad)
-		
-		#get the photometry for the stars
-		rawflux = aperture_photometry(img, apertures)
+                #determine the magnitudes, errors and distances to the objects
+                #prepare the apertures
+                positions = [xx,yy]
+                apertures = CircularAperture(positions, r = rad)
+                
+                #get the photometry for the stars
+                rawflux = aperture_photometry(img, apertures)
 
-		#get the background	
-		bkg_mean = median
-		bkg_sum = bkg_mean*(numpy.pi*rad**2)
+                #get the background        
+                bkg_mean = median
+                bkg_sum = bkg_mean*(numpy.pi*rad**2)
 
-		#get the star flux and error & mag and error
-		flx = rawflux['aperture_sum']-bkg_sum
-		flx_er = numpy.sqrt(rawflux['aperture_sum'])
-		mag = 25.-2.5*numpy.log10(flx)
-		mag_er = (2.5/numpy.log(10.))*(flx_er/flx)
+                #get the star flux and error & mag and error
+                flx = rawflux['aperture_sum']-bkg_sum
+                flx_er = numpy.sqrt(rawflux['aperture_sum'])
+                mag = 25.-2.5*numpy.log10(flx)
+                mag_er = (2.5/numpy.log(10.))*(flx_er/flx)
 
-		print 'Getting reference stars for the subtraction at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
-		#star selecting stars that are not near any other bright stars	
-		output = open(cdedir+'refstars.txt', 'w')
-		cnt = 0
-		itr = 0
-		x = xx
-		y = yy
+                print 'Getting reference stars for the subtraction at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+                #star selecting stars that are not near any other bright stars        
+                output = open(cdedir+'refstars.txt', 'w')
+                cnt = 0
+                itr = 0
+                x = xx
+                y = yy
 
-		while (cnt < nrstars) and (itr < len(xx)):
-			#select a random object
-			jj = random.randint(0,len(x)-1)
-			if (mag_er[jj] > 0) and (mag_er[jj] < 0.02):
-				#get the nearest neightbors in 3 pix
-				dist = numpy.sqrt((x[jj]-x)**2+(y[jj]-y)**2)
-				idx = numpy.where(dist < 3)
-				idxs = idx[0]
-				#assuming the star is alone and it is not near an edge
-				if (len(idxs) == 1):
-					output.write("%4d %4d\n" % (x[jj],y[jj]))
-					cnt = cnt+1
-				else:
-					if (len(idxs) > 0):
-						#check the magnitudes in case the neighbors are just faint stars
-						dmag = mag[jj]-mag[idxs]
-						cdmag = dmag[numpy.where(dmag != 0)]
-						chk = numpy.where(cdmag > 0)
-						if (len(chk[0]) == 0):
-							output.write("%4d %4d\n" % (x[jj],y[jj]))
-							cnt = cnt+1
-			x = numpy.delete(x,jj)
-			y = numpy.delete(y,jj)
-			itr = itr+1
-		nrstars = cnt #update the number of stars to use, just in case the maximum wasn't found but we ran out of stars
-		output.close()
-		imglist.close()
+                while (cnt < nrstars) and (itr < len(xx)):
+                        #select a random object
+                        jj = random.randint(0,len(x)-1)
+                        if (mag_er[jj] > 0) and (mag_er[jj] < 0.02):
+                                #get the nearest neightbors in 3 pix
+                                dist = numpy.sqrt((x[jj]-x)**2+(y[jj]-y)**2)
+                                idx = numpy.where(dist < 3)
+                                idxs = idx[0]
+                                #assuming the star is alone and it is not near an edge
+                                if (len(idxs) == 1):
+                                        output.write("%4d %4d\n" % (x[jj],y[jj]))
+                                        cnt = cnt+1
+                                else:
+                                        if (len(idxs) > 0):
+                                                #check the magnitudes in case the neighbors are just faint stars
+                                                dmag = mag[jj]-mag[idxs]
+                                                cdmag = dmag[numpy.where(dmag != 0)]
+                                                chk = numpy.where(cdmag > 0)
+                                                if (len(chk[0]) == 0):
+                                                        output.write("%4d %4d\n" % (x[jj],y[jj]))
+                                                        cnt = cnt+1
+                        x = numpy.delete(x,jj)
+                        y = numpy.delete(y,jj)
+                        itr = itr+1
+                nrstars = cnt #update the number of stars to use, just in case the maximum wasn't found but we ran out of stars
+                output.close()
+                imglist.close()
 
-		#write the parameter file now that we have the stars
-		output = open(cdedir+'parms.txt', 'w')
-		output.write("%1d %1d %1d %4d\n" % (stmp, krnl, ordr, nrstars))
-		output.close()
+                #write the parameter file now that we have the stars
+                output = open(cdedir+'parms.txt', 'w')
+                output.write("%1d %1d %1d %4d\n" % (stmp, krnl, ordr, nrstars))
+                output.close()
 
-		output = open(cdedir+'ref.txt', 'w')
-		output.write("ref.fits\n")
-		output.close()
+                output = open(cdedir+'ref.txt', 'w')
+                output.write("ref.fits\n")
+                output.close()
 
-		output = open(cdedir+'img.txt', 'w')
-		output.write("img.fits\n")
-		output.close()
+                output = open(cdedir+'img.txt', 'w')
+                output.write("img.fits\n")
+                output.close()
 
 
-		#do the differencing!
-		print 'Now starting the subtraction at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
-		dodiff = os.system('./a.out')
-		mvdiff = os.system('mv dimg.fits '+difdir+finnme)
-		
-		#get the photometry from the differenced image
-		print 'Now starting the photometry at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+                #do the differencing!
+                print 'Now starting the subtraction at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+                dodiff = os.system('./a.out')
+                mvdiff = os.system('mv dimg.fits '+difdir+finnme)
+                
+                #get the photometry from the differenced image
+                print 'Now starting the photometry at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
 
-		#read in the image
-		diflist = fits.open(difdir+finnme)
-		iheader = diflist[0].header #get the header info
-		dif = diflist[0].data #get the image info
-	
-		print 'Getting fluxes from the differenced file at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
-		#determine the magnitudes, errors and distances to the objects
-		#prepare the apertures
-		positions = [xx,yy]
-		apertures = CircularAperture(positions, r = rad)
-		
-		#get the photometry for the stars
-		rawflux = aperture_photometry(dif, apertures)
+                #read in the image
+                diflist = fits.open(difdir+finnme)
+                iheader = diflist[0].header #get the header info
+                dif = diflist[0].data #get the image info
+        
+                print 'Getting fluxes from the differenced file at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+                #determine the magnitudes, errors and distances to the objects
+                #prepare the apertures
+                positions = [xx,yy]
+                apertures = CircularAperture(positions, r = rad)
+                
+                #get the photometry for the stars
+                rawflux = aperture_photometry(dif, apertures)
 
-		#get the background	
-		bkg_mean = median
-		bkg_sum = bkg_mean*(numpy.pi*rad**2)
+                #get the background        
+                bkg_mean = median
+                bkg_sum = bkg_mean*(numpy.pi*rad**2)
 
-		#get the star flux and error & mag and error
-		flx = rawflux['aperture_sum']-bkg_sum
-		flx_er = numpy.sqrt(numpy.abs(rawflux['aperture_sum']))
-		mag = 25.-2.5*numpy.log10(flx/exp_time+mflx/expm_time)
-		mag_er = (2.5/numpy.log(10.))*(numpy.sqrt((flx_er/exp_time)**2+(mflx_er/expm_time)**2)/(flx/exp_time+mflx/expm_time))
-		diflist.close()
+                #get the star flux and error & mag and error
+                flx = rawflux['aperture_sum']-bkg_sum
+                flx_er = numpy.sqrt(numpy.abs(rawflux['aperture_sum']))
+                mag = 25.-2.5*numpy.log10(flx/exp_time+mflx/expm_time)
+                mag_er = (2.5/numpy.log(10.))*(numpy.sqrt((flx_er/exp_time)**2+(mflx_er/expm_time)**2)/(flx/exp_time+mflx/expm_time))
+                diflist.close()
 
-		#print the flux information to the data file
-		nme = finnme.split('.')
-		output = open(difdir+nme[0]+'.flux', 'w')
-		for jj in range(0, len(xx)):
-			output.write(str(long(ids[jj]))+','+str(xm[jj])+','+str(ym[jj])+','+str(jd)+','+str(mag[jj])+','+str(mag_er[jj])+'\n')
-		output.close()
-		print 'Moving to the next file at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
+                #print the flux information to the data file
+                nme = finnme.split('.')
+                output = open(difdir+nme[0]+'.flux', 'w')
+                for jj in range(0, len(xx)):
+                        output.write(str(long(ids[jj]))+','+str(xm[jj])+','+str(ym[jj])+','+str(jd)+','+str(mag[jj])+','+str(mag_er[jj])+'\n')
+                output.close()
+                print 'Moving to the next file at '+strftime("%a, %d %b %Y %H:%M:%S")+'.'
 print 'All done at '+strftime("%a, %d %b %Y %H:%M:%S")+'. See ya later alligator!'
