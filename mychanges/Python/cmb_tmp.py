@@ -43,16 +43,16 @@ num = np.zeros(nfiles)
 
 for ii in range(0,nfiles):
 
-	#read in the image
-	img_data = pyfits.getdata(mstdir+files[ii])
-	expt[ii] = pyfits.getval(mstdir+files[ii],'EXPTIME')
-	num[ii] = pyfits.getval(mstdir+files[ii],'NUMCOMB')
+        #read in the image
+        img_data = pyfits.getdata(mstdir+files[ii])
+        expt[ii] = pyfits.getval(mstdir+files[ii],'EXPTIME')
+        num[ii] = pyfits.getval(mstdir+files[ii],'NUMCOMB')
 
-	#add the image to the vector
-	all_data[ii] = img_data 
+        #add the image to the vector
+        all_data[ii] = img_data 
 
-	if (ii % 10 == 0) and (ii > 0):
-		print 'Finished with 10 images at '+str(time.strftime("%a %d %b %Y %H:%M:%S"))+'.'
+        if (ii % 10 == 0) and (ii > 0):
+                print 'Finished with 10 images at '+str(time.strftime("%a %d %b %Y %H:%M:%S"))+'.'
 
 #median combine the data
 combined_data = np.median(all_data,axis=0)

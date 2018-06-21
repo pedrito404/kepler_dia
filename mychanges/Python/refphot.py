@@ -80,23 +80,23 @@ idx = 0
 
 offset = numpy.zeros((len(rads),len(x)))
 for ii in range(0, len(x)):
-	if (x[ii] > 0) and (x[ii] < 2048) and (y[ii] > 0) and (y[ii] < 2048):
-		dist = numpy.sqrt((x[ii]-x)**2+(y[ii]-y)**2)
-		chk = numpy.where(dist < 6.)
-		if (len(chk[0]) == 1):
-			for jj in range(1, len(rads)):
-				mg1 = 25.-2.5*numpy.log10(phot_table[ii][jj+3])
-				mg0 = 25.-2.5*numpy.log10(phot_table[ii][jj+2])
-				offset[jj,ii] = mg1-mg0
+        if (x[ii] > 0) and (x[ii] < 2048) and (y[ii] > 0) and (y[ii] < 2048):
+                dist = numpy.sqrt((x[ii]-x)**2+(y[ii]-y)**2)
+                chk = numpy.where(dist < 6.)
+                if (len(chk[0]) == 1):
+                        for jj in range(1, len(rads)):
+                                mg1 = 25.-2.5*numpy.log10(phot_table[ii][jj+3])
+                                mg0 = 25.-2.5*numpy.log10(phot_table[ii][jj+2])
+                                offset[jj,ii] = mg1-mg0
 prv = 1.
 opt_rad = 10.
 for ii in range(0, len(rads)):
-	chk = numpy.median(offset[ii,:])	
-	if (numpy.abs(chk-prv) <= 0.001) and (rads[ii] < opt_rad):	
-		opt_rad = rads[ii]
-		print 'The optimal aperture size is '+str(opt_rad)+'.'
-	if (numpy.abs(chk-prv) > 0.001):
-		prv = chk
+        chk = numpy.median(offset[ii,:])        
+        if (numpy.abs(chk-prv) <= 0.001) and (rads[ii] < opt_rad):        
+                opt_rad = rads[ii]
+                print 'The optimal aperture size is '+str(opt_rad)+'.'
+        if (numpy.abs(chk-prv) > 0.001):
+                prv = chk
 
 #do the aperture photometry
 apertures = CircularAperture(positions, r = opt_rad)
@@ -120,20 +120,20 @@ err = (2.5/numpy.log(10.))*(flx_er/flx)
 #write the magnitudes to a file
 output = open(caldir+camera+'_'+ccd+'_master.ap', 'w')
 for ii in range(0, len(phot_table['id'])):
-	if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
-		output.write(str(long(ticid[ii]))+','+str(x_pix[ii])+','+str(y_pix[ii])+','+str(tmag[ii])+','+str(mag[ii])+','+str(err[ii])+'\n')
+        if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
+                output.write(str(long(ticid[ii]))+','+str(x_pix[ii])+','+str(y_pix[ii])+','+str(tmag[ii])+','+str(mag[ii])+','+str(err[ii])+'\n')
 output.close()
 
 #write the fluxes to a file
 output = open(caldir+camera+'_'+ccd+'_master.flux', 'w')
 for ii in range(0, len(phot_table['id'])):
-	if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
-		output.write(str(long(ticid[ii]))+','+str(x_pix[ii])+','+str(y_pix[ii])+','+str(flx[ii])+','+str(flx_er[ii])+'\n')
+        if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
+                output.write(str(long(ticid[ii]))+','+str(x_pix[ii])+','+str(y_pix[ii])+','+str(flx[ii])+','+str(flx_er[ii])+'\n')
 output.close()
 
 #write the star list to a file
 output = open(caldir+camera+'_'+ccd+'_starlist.txt', 'w')
 for ii in range(0, len(phot_table['id'])):
-	if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
-		output.write(str(long(ticid[ii]))+','+str(long(x_pix[ii]))+','+str(long(y_pix[ii]))+'\n')
+        if (x_pix[ii] > 0) and (x_pix[ii] < 2048) and (y_pix[ii] > 0) and (y_pix[ii] < 2048) and (numpy.isnan(mag[ii]) != 1):
+                output.write(str(long(ticid[ii]))+','+str(long(x_pix[ii]))+','+str(long(y_pix[ii]))+'\n')
 output.close()
