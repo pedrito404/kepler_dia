@@ -10,6 +10,6 @@ fi
 
 #para printar os files com os caminhos
 
-find /home/sonic/Documents/Mestrado/FFIs/8_golden/*.fits -type f > /home/sonic/dia_kepler/mychanges/Python/golden.txt
+find /home/usuario/Documents/Mestrado/FFIs/8_golden/*.fits -type f > /home/usuario/dia_kepler/mychanges/Python/golden.txt
 
-find /home/sonic/Documents/Mestrado/FFIs/*.fits -type f > /home/sonic/dia_kepler/mychanges/Python/allffis.txt
+find /home/usuario/Documents/Mestrado/FFIs/*.fits -type f > /home/usuario/dia_kepler/mychanges/Python/allffis.txt

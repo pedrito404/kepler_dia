@@ -1,8 +1,8 @@
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009114174833_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009114204835_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009115002613_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009115053616_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009115080620_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009115131122_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009115173611_ffi-cal.fits
-/home/sonic/Documents/Mestrado/FFIs/8_golden/kplr2009116035924_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009114174833_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009114204835_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009115002613_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009115053616_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009115080620_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009115131122_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009115173611_ffi-cal.fits
+/home/usuario/Documents/Mestrado/FFIs/8_golden/kplr2009116035924_ffi-cal.fits
