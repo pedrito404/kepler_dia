@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 */*/.py
 */*/.pdf
 */*/.c
@@ -9,3 +10,15 @@
 */clean_square.ipynb
 */programao_python3.ipynb
 mychanges/Python/Getting Started with Photutils-checkpoint.ipynb
+=======
+*.py
+*.pdf
+*.c
+*.fits
+../../.ipynb_checkpoints/
+../.ipynb_checkpoints/
+../clean_commented.ipynb
+../clean_sonic.ipynb
+../clean_square.ipynb
+../programao_python3.ipynb
+>>>>>>> b485c842763c5cdc5633566323bc0c8404cc205c
