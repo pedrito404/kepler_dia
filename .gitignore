@@ -1,1 +1,10 @@
-.ipynb_checkpoints/
+*.py
+*.pdf
+*.c
+*.fits
+../../.ipynb_checkpoints/
+../.ipynb_checkpoints/
+../clean_commented.ipynb
+../clean_sonic.ipynb
+../clean_square.ipynb
+../programao_python3.ipynb
